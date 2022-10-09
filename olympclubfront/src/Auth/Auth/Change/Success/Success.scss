@@ -1,0 +1,33 @@
+.window-container{
+  width: inherit;
+  height: 850px;
+  display: flex;
+  justify-content: center;
+}
+.window{
+  border: 1px black solid;
+  margin: auto;
+  min-width: 100px;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.window-title{
+  text-align: center;
+}
+
+.window-text{
+  text-align: center;
+}
+
+.window-button{
+  display: block;
+  width: 300px;
+  margin: auto;
+  padding: 10px;
+  color: white;
+  background-color: #0066FF;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 15px;
+}

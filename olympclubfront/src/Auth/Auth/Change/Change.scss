@@ -1,0 +1,99 @@
+.authorize-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: inherit;
+  min-height: 850px;
+}
+
+.authorize-window {
+  min-height: 350px;
+  border: black 1px solid;
+  min-width: 630px;
+  border-radius: 25px;
+  padding: 10px;
+}
+
+.authorize-title {
+  margin-bottom: 10px;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 36px;
+  line-height: 42px;
+  text-align: center;
+}
+
+.form-container {
+  display: block;
+  height: inherit;
+  min-height: 200px;
+}
+
+
+.password-input {
+  min-height: 55px;
+  width: 525px;
+  margin: auto auto 30px;
+  position: relative;
+}
+
+.password-input label {
+  position: absolute;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 21px;
+  left: 15px;
+  top: -20px
+}
+
+#password {
+  display: block;
+  padding: 10px;
+  width: 500px;
+  height: 30px;
+  border-radius: 10px;
+
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 21px;
+  color: rgba(0, 0, 0, 0.38);
+}
+
+.password-eye.view {
+  background: var(--eye_close) 0 0 no-repeat;
+}
+
+.password-eye {
+  position: absolute;
+  top: 11px;
+  right: 6px;
+  background: var(--eye_open) 0 0 no-repeat;
+  display: inline-block;
+  width: 40px;
+  height: 32px;
+}
+
+.submit-input {
+  width: 330px;
+  margin: auto;
+}
+
+#submit {
+  width: 310px;
+  padding: 10px;
+  border: none;
+  background-color: #0066FF;
+  border-radius: 45px;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 21px;
+
+  color: #FFFFFF;
+}

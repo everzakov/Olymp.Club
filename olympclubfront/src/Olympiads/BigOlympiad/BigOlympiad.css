@@ -1,0 +1,148 @@
+.olympiadContainer {
+  width: 100%;
+  padding: 20px;
+}
+
+.bigOlympiad {
+  width: 1200px;
+  height: 350px;
+  border: 2px black solid;
+  margin: 80px auto 20px auto;
+  border-radius: 25px;
+  padding-left: 20px;
+}
+
+.bigOlympiad td:first-child {
+  width: 20%;
+}
+
+.bigOlympiad td:nth-child(2) {
+  width: 70%;
+  padding-left: 10px;
+}
+
+.bigOlympiad td:last-child {
+  width: 10%;
+  font-size: 36px;
+}
+
+.bigOlympiadolympiads {
+  padding-left: 20px;
+  padding-right: 20px;
+  margin: auto;
+}
+
+.bigOlympiadolympiadsOlympiad {
+  display: inline-block;
+  width: 260px;
+  height: 180px;
+  margin: 0 auto 20px auto;
+  padding-left: 20px;
+  padding-top: 20px;
+}
+
+.bigOlympiadolympiadsImg {
+  width: 115px;
+  margin: auto;
+  height: 100px;
+  border-radius: 20px;
+  border: 2px black solid;
+  padding: 10px;
+}
+
+.bigOlympiadolympiadsImg img {
+  width: 100px;
+  height: 100px;
+  display: block;
+  margin: auto;
+}
+
+.BigOlympiadLink {
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 32px;
+  horiz-align: center;
+}
+
+.OlympiadLink {
+  width: 220px;
+  color: #0047FF;
+  font-size: 32px;
+  font-weight: bold;
+  display: block;
+  margin: auto;
+}
+
+.bigOlympiad td:last-child td:last-child {
+  padding: 0 100px;
+}
+
+.ButtonLink {
+  background-color: #0047FF;
+  color: white;
+  display: block;
+  padding: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  width: fit-content;
+  border-radius: 25px;
+  margin: 0 auto 10px auto;
+}
+
+.ButtonLink:last-child {
+  margin-bottom: 0;
+}
+
+.FilterSubject {
+  width: 370px;
+}
+
+.Filter {
+  position: relative;
+}
+
+.Filter::after {
+  background-image: url("http://localhost:8000/static/icons/arrow.png");
+  background-size: 30px 30px;
+  right: 5px;
+  top: -10px;
+  content: "";
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  position: absolute;
+  pointer-events: none;
+}
+
+.Filter select {
+  width: 370px;
+  height: 40px;
+  padding-left: 10px;
+  font-size: 24px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+}
+
+.Filter select::-ms-expand {
+  display: none;
+}
+
+.Filter:first-child select {
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+}
+
+.Filter:last-child select {
+  border-bottom-right-radius: 25px;
+  border-top-right-radius: 25px;
+  padding-right: 50px;
+}
+
+.Filter:last-child:after {
+  right: 15px;
+}
+
+/*# sourceMappingURL=News.css.map */

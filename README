@@ -1,0 +1,23 @@
+1)install go version 1.17
+2)install postgresql
+3)import database.sql:
+psql -f database.sql -p port -U username dbname
+4)cd olympclubserver
+5)go mod tidy
+6)make .env:
+DATABASE_URL="postgres://YourUserName:YourPassword@YourHostname:5432/olympclub"
+MAIL_FROM="user@gmail.com"
+MAIL_USER="user"
+MAIL_PASSWORD="user_password"
+MAIL_ADDR="smtp.gmail.com:587"
+MAIL_HOST="smtp.gmail.com"
+7) export $(grep -v '^#' .env | xargs)
+8) go run cmd/main.go
+9) cd olympclubfront
+npm install
+10)make .env
+REACT_APP_API_URL="http://127.0.0.1:8000/api/v1"
+REACT_APP_STATIC_FILES="http://127.0.0.1:8000/static"
+PORT=3005
+(you can change address of your server in olympclubserver/cmd/main.go)
+11) npm start

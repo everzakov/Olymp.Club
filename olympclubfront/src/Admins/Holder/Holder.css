@@ -1,0 +1,86 @@
+.holder-window-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: inherit;
+  min-height: 850px;
+}
+
+.holder-window {
+  min-height: 350px;
+  border: black 1px solid;
+  min-width: 630px;
+  border-radius: 25px;
+  padding: 10px;
+}
+
+.holder-title {
+  margin-bottom: 40px;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 36px;
+  line-height: 42px;
+  text-align: center;
+}
+
+.form-container {
+  display: block;
+  height: inherit;
+  min-height: 400px;
+}
+
+.holder-name-input, .holder-logo-input {
+  min-height: 75px;
+  width: 525px;
+  position: relative;
+  margin: auto auto 30px;
+}
+
+.holder-name-input label, .holder-logo-input label {
+  position: absolute;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 21px;
+  left: 15px;
+  top: -30px;
+}
+
+#holder-name, #holder-logo {
+  margin-top: 20px;
+  padding: 10px;
+  height: 30px;
+  width: 500px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 21px;
+  color: rgba(0, 0, 0, 0.38);
+  display: block;
+}
+
+.submit-input {
+  width: 330px;
+  margin: auto;
+}
+
+#submit {
+  width: 310px;
+  padding: 10px;
+  border: none;
+  background-color: #0066FF;
+  border-radius: 45px;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 21px;
+  color: #FFFFFF;
+}
+
+/*# sourceMappingURL=News.css.map */
