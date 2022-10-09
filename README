@@ -1,7 +1,9 @@
 1)install go version 1.17
-2)install postgresql
+2)install postgresql (brew install@14)
 3)import database.sql:
-psql -f database.sql -p port -U username dbname
+psql
+CREATE DATABASE olympclub; 
+psql -f database.sql -p port -U username olympclub
 4)cd olympclubserver
 5)go mod tidy
 6)make .env:
@@ -11,6 +13,7 @@ MAIL_USER="user"
 MAIL_PASSWORD="user_password"
 MAIL_ADDR="smtp.gmail.com:587"
 MAIL_HOST="smtp.gmail.com"
+FRONT_URL="localhost:3005"
 7) export $(grep -v '^#' .env | xargs)
 8) go run cmd/main.go
 9) cd olympclubfront
@@ -21,3 +24,4 @@ REACT_APP_STATIC_FILES="http://127.0.0.1:8000/static"
 PORT=3005
 (you can change address of your server in olympclubserver/cmd/main.go)
 11) npm start
+12) after creating and approving of your email (add your user_id to admin model in olymclub database)
