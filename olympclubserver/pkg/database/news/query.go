@@ -47,6 +47,6 @@ func GetQueryNewsOptions(filter NewsFilter) (string, []interface{}) {
 		count += 1
 		inters = append(inters, filter.Key)
 	}
-	fmt.Println(query)
+	// fmt.Println(query)
 	return query, inters
 }

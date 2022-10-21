@@ -29,7 +29,7 @@ class Olympiads extends React.Component {
             }
             query += "grade=" + this.state.filter.grade;
         }
-        console.log(query)
+        // console.log(query)
         return query
     }
 
@@ -39,7 +39,7 @@ class Olympiads extends React.Component {
         headers.append('Accept', 'application/json');
         headers.append('Origin',window.location.origin.toString());
         let query = this.getFilterQuery()
-        console.log(process.env.REACT_APP_API_URL+"/olympiads" + query)
+        // console.log(process.env.REACT_APP_API_URL+"/olympiads" + query)
         fetch(process.env.REACT_APP_API_URL+"/olympiads" + query, {
             mode: 'cors',
             credentials: "omit",
@@ -57,14 +57,14 @@ class Olympiads extends React.Component {
                         headers: headers
                     }).then(response => response.json())
                         .then(json => {
-                            console.log(json)
+                            // console.log(json)
                             let olympiads = this.state.olympiads
                             olympiads[index].bigOlympiad = json.big_olympiad
                             this.setState({olympiads: olympiads})
                         })
                         .catch(error => console.log('Authorization failed: ' + error.message))
                 })
-                console.log(olympiads)
+                // console.log(olympiads)
                 this.setState({olympiads: json.olympiads})
             })
             .catch(error => console.log('Authorization failed: ' + error.message));

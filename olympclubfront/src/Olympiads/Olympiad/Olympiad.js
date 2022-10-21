@@ -19,14 +19,14 @@ const Olympiad = ({token}) => {
     const [news, setNews] = useState([])
     const bigOlympiadID = params.bigOlympiad
     const olympiadID = params.olympiad
-    console.log(bigOlympiadID, olympiadID)
+    // console.log(bigOlympiadID, olympiadID)
 
     const getNews = () => {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         headers.append('Origin',window.location.origin.toString());
-        console.log(process.env.REACT_APP_API_URL+"/olympiad/" + bigOlympiadID + "/" + olympiadID + "/news")
+        // console.log(process.env.REACT_APP_API_URL+"/olympiad/" + bigOlympiadID + "/" + olympiadID + "/news")
         fetch(process.env.REACT_APP_API_URL+"/olympiad/" +  bigOlympiadID + "/" + olympiadID + "/news", {
             mode: 'cors',
             credentials: "omit",
@@ -35,7 +35,7 @@ const Olympiad = ({token}) => {
         })
             .then(response => response.json())
             .then(json =>{
-                console.log(json.news)
+                // console.log(json.news)
                 setNews(json.news)
             })
             .catch(error => console.log('Authorization failed: ' + error.message));
@@ -46,7 +46,7 @@ const Olympiad = ({token}) => {
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         headers.append('Origin',window.location.origin.toString());
-        console.log(process.env.REACT_APP_API_URL+"/holder/" + olympiad.holder_id)
+        // console.log(process.env.REACT_APP_API_URL+"/holder/" + olympiad.holder_id)
         fetch(process.env.REACT_APP_API_URL+"/holder/" + olympiad.holder_id, {
             mode: 'cors',
             credentials: "omit",
@@ -55,7 +55,7 @@ const Olympiad = ({token}) => {
         })
             .then(response => response.json())
             .then(json =>{
-                console.log(json)
+                // console.log(json)
                 olympiad.holder = json.holder
                 setValue(olympiad)
             })
@@ -66,7 +66,7 @@ const Olympiad = ({token}) => {
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         headers.append('Origin',window.location.origin.toString());
-        console.log(process.env.REACT_APP_API_URL+"/olympiad/" + bigOlympiadID + "/" + olympiadID)
+        // console.log(process.env.REACT_APP_API_URL+"/olympiad/" + bigOlympiadID + "/" + olympiadID)
         fetch(process.env.REACT_APP_API_URL+"/olympiad/" +  bigOlympiadID + "/" + olympiadID, {
             mode: 'cors',
             credentials: "omit",
@@ -75,7 +75,7 @@ const Olympiad = ({token}) => {
         })
             .then(response => response.json())
             .then(json =>{
-                console.log(json)
+                // console.log(json)
                 getHolder(json.olympiad)
                 })
             .catch(error => console.log('Authorization failed: ' + error.message));

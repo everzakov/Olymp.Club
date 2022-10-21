@@ -40,7 +40,7 @@ const AddHolder = ({token}) => {
             "--AaB03x--")*/
         headers.append("Authorization", "Bearer " + token)
         // headers.append("X-CSRF-Token", csrfToken)
-        console.log(process.env.REACT_APP_API_URL+"/admin/holder")
+        // console.log(process.env.REACT_APP_API_URL+"/admin/holder")
         fetch(process.env.REACT_APP_API_URL+"/admin/holder", {
             mode: 'cors',
             credentials: "omit",
@@ -49,10 +49,10 @@ const AddHolder = ({token}) => {
             body:formData
         })
             .then(response => {
-                console.log(response.status)
+                // console.log(response.status)
                 if (response.status !== 200) {
                     response.json().then((errorJson) => {
-                        console.log(errorJson.error)
+                        // console.log(errorJson.error)
                         toast(errorJson.error)
                     });
                 }else{

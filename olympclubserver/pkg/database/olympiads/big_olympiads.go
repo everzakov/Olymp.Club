@@ -48,7 +48,7 @@ func (table *BigOlympiadTable) CreateBigOlympiad(olympiad BigOlympiad) (BigOlymp
 	table.mtx.Lock()
 	defer table.mtx.Unlock()
 	_, err = table.Connection.Exec(context.Background(), "insert into \"BigOlympiadModel\" (name, short, logo, description, status) VALUES($1, $2, $3, $4, $5)", olympiad.Name, olympiad.Short, olympiad.Logo, olympiad.Description, olympiad.Status)
-	fmt.Println(err)
+	// fmt.Println(err)
 	if err != nil {
 		return BigOlympiad{}, err
 	}

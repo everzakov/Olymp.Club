@@ -23,9 +23,9 @@ const AddNews = ({token}) => {
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         headers.append('Origin',window.location.origin.toString());
-        console.log("Bearer " + token)
+        // console.log("Bearer " + token)
         headers.append('Authorization', "Bearer " + token)
-        console.log(process.env.REACT_APP_API_URL+"/big_olympiads")
+        // console.log(process.env.REACT_APP_API_URL+"/big_olympiads")
         fetch(process.env.REACT_APP_API_URL+"/big_olympiads", {
             mode: 'cors',
             credentials: "omit",
@@ -38,7 +38,7 @@ const AddNews = ({token}) => {
         })
             .then(response => response.json())
             .then(json =>{
-                console.log(json.olympiads)
+                // console.log(json.olympiads)
                 setBigOlympiads(json.olympiads)
             })
             .catch(error => console.log('Authorization failed: ' + error.message));
@@ -49,7 +49,7 @@ const AddNews = ({token}) => {
     }
 
     const save = (e) => {
-       console.log("holder", e.target.holder)
+        // console.log("holder", e.target.holder)
         e.preventDefault()
         const formData = new FormData();
         formData.append("title", e.target.title.value);
@@ -71,7 +71,7 @@ const AddNews = ({token}) => {
             "--AaB03x--")*/
         headers.append("Authorization", "Bearer " + token)
         // headers.append("X-CSRF-Token", csrfToken)
-        console.log(process.env.REACT_APP_API_URL+"/admin/news")
+        // console.log(process.env.REACT_APP_API_URL+"/admin/news")
         fetch(process.env.REACT_APP_API_URL+"/admin/news", {
             mode: 'cors',
             credentials: "omit",
@@ -80,7 +80,7 @@ const AddNews = ({token}) => {
             body:formData
         })
             .then(response => {
-                console.log(response.status)
+                // console.log(response.status)
                 if (response.status !== 200) {
                     response.json().then((errorJson) => {
                         console.log(errorJson.error)
@@ -103,9 +103,9 @@ const AddNews = ({token}) => {
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         headers.append('Origin',window.location.origin.toString());
-        console.log("Bearer " + token)
+        // console.log("Bearer " + token)
         headers.append('Authorization', "Bearer " + token)
-        console.log(process.env.REACT_APP_API_URL+"/events")
+        // console.log(process.env.REACT_APP_API_URL+"/events")
         fetch(process.env.REACT_APP_API_URL+"/events", {
             mode: 'cors',
             credentials: "omit",
@@ -118,7 +118,7 @@ const AddNews = ({token}) => {
         })
             .then(response => response.json())
             .then(json =>{
-                console.log(json.events)
+                // console.log(json.events)
                 setEvents(json.events)
             })
             .catch(error => console.log('Authorization failed: ' + error.message));
@@ -130,9 +130,9 @@ const AddNews = ({token}) => {
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         headers.append('Origin',window.location.origin.toString());
-        console.log("Bearer " + token)
+        // console.log("Bearer " + token)
         headers.append('Authorization', "Bearer " + token)
-        console.log(process.env.REACT_APP_API_URL+"/olympiads")
+        // console.log(process.env.REACT_APP_API_URL+"/olympiads")
         fetch(process.env.REACT_APP_API_URL+"/olympiads", {
             mode: 'cors',
             credentials: "omit",
@@ -145,7 +145,7 @@ const AddNews = ({token}) => {
         })
             .then(response => response.json())
             .then(json =>{
-                console.log(json.olympiads)
+                // console.log(json.olympiads)
                 setOlympiads(json.olympiads)
             })
             .catch(error => console.log('Authorization failed: ' + error.message));

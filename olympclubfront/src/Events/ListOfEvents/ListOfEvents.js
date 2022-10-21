@@ -3,7 +3,7 @@ import classes from './ListOfEvents.scss'
 import {Link} from "react-router-dom";
 
 const ListOfEvents = ({events, token}) => {
-    console.log("ListOfEvents", events)
+    // console.log("ListOfEvents", events)
     return (
         <div className={`${classes.olympiadContainer} olympiadContainer`}>
             {events.map((item, index) => (

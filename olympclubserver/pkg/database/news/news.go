@@ -2,7 +2,6 @@ package news
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"sync"
 
@@ -26,7 +25,7 @@ func (table *NewsTable) InsertNews(news News) error {
 	table.mtx.Lock()
 	defer table.mtx.Unlock()
 	err := table.Connection.QueryRow(context.Background(), "insert into \"NewsModel\" (\"Title\", \"Description\", \"TableStruct\", \"Key\") VALUES($1, $2, $3, $4) RETURNING id;", news.Title, news.Description, news.Table, news.Key).Scan(&news.ID)
-	fmt.Println(err)
+	// fmt.Println(err)
 	return err
 }
 
@@ -41,7 +40,7 @@ func (table *NewsTable) GetNews(filter NewsFilter) ([]News, error) {
 	news := []News{}
 	for rows.Next() {
 		values, err := rows.Values()
-		fmt.Println(err)
+		// fmt.Println(err)
 		if err != nil {
 			log.Fatal("error while iterating dataset")
 		}

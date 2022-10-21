@@ -6,7 +6,6 @@ import (
 	session_database "OlympClub/pkg/database/sessions"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -95,14 +94,14 @@ func (h *EventHandler) GetEvents(w http.ResponseWriter, r *http.Request) {
 		HolderID: int32(holderId),
 	}
 	events, err := h.EventModel.GetEvents(filter)
-	fmt.Println(events)
+	// fmt.Println(events)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		ans["error"] = "Problem with Database"
 		json.NewEncoder(w).Encode(ans)
 		return
 	}
-	fmt.Println(events)
+	// fmt.Println(events)
 	w.WriteHeader(http.StatusOK)
 	ans["events"] = events
 	json.NewEncoder(w).Encode(ans)
@@ -138,7 +137,7 @@ func (h *EventHandler) GetEventById(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	ans["event"] = events[0]
-	fmt.Println(ans)
+	// fmt.Println(ans)
 	json.NewEncoder(w).Encode(ans)
 }
 
@@ -184,7 +183,7 @@ func (h *EventHandler) GetEventNewsById(w http.ResponseWriter, r *http.Request) 
 	}
 	w.WriteHeader(http.StatusOK)
 	ans["news"] = news
-	fmt.Println(ans)
+	// fmt.Println(ans)
 	json.NewEncoder(w).Encode(ans)
 }
 
@@ -211,8 +210,8 @@ func (h *EventHandler) GetUserEvents(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		events, err := h.EventUserModel.GetEvents(session[0].UserID)
-		fmt.Println(events)
-		fmt.Println(events)
+		// fmt.Println(events)
+		// fmt.Println(events)
 		w.WriteHeader(http.StatusOK)
 		ans["events"] = events
 		json.NewEncoder(w).Encode(ans)

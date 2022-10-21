@@ -19,7 +19,7 @@ const AddOlympiad = ({token}) => {
     const [website, setWebSite] = useState()
     const [holders, setHolders] = useState([])
     const [holder, setHolder] = useState()
-const [level, setLevel] = useState()
+    const [level, setLevel] = useState()
     const [grade, setGrade] = useState("")
 
     let keyMap = new Map();
@@ -73,7 +73,7 @@ const [level, setLevel] = useState()
         setGrade(grades)
     }
     const save = (e) => {
-       console.log("holder", e.target.holder)
+        // console.log("holder", e.target.holder)
         e.preventDefault()
         const formData = new FormData();
         formData.append("olympiad_logo", image);
@@ -102,7 +102,7 @@ const [level, setLevel] = useState()
             "--AaB03x--")*/
         headers.append("Authorization", "Bearer " + token)
         // headers.append("X-CSRF-Token", csrfToken)
-        console.log(process.env.REACT_APP_API_URL+"/admin/olympiad")
+        // console.log(process.env.REACT_APP_API_URL+"/admin/olympiad")
         fetch(process.env.REACT_APP_API_URL+"/admin/olympiad", {
             mode: 'cors',
             credentials: "omit",
@@ -111,10 +111,10 @@ const [level, setLevel] = useState()
             body:formData
         })
             .then(response => {
-                console.log(response.status)
+                // console.log(response.status)
                 if (response.status !== 200) {
                     response.json().then((errorJson) => {
-                        console.log(errorJson.error)
+                        // console.log(errorJson.error)
                         toast(errorJson.error)
                     });
                 }else{
@@ -134,9 +134,9 @@ const [level, setLevel] = useState()
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         headers.append('Origin',window.location.origin.toString());
-        console.log("Bearer " + token)
+        // console.log("Bearer " + token)
         headers.append('Authorization', "Bearer " + token)
-        console.log(process.env.REACT_APP_API_URL+"/holders")
+        // console.log(process.env.REACT_APP_API_URL+"/holders")
         fetch(process.env.REACT_APP_API_URL+"/holders", {
             mode: 'cors',
             credentials: "omit",
@@ -149,7 +149,7 @@ const [level, setLevel] = useState()
         })
             .then(response => response.json())
             .then(json =>{
-                console.log(json.holders)
+                // console.log(json.holders)
                 setHolders(json.holders)
             })
             .catch(error => console.log('Authorization failed: ' + error.message));
@@ -160,9 +160,9 @@ const [level, setLevel] = useState()
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         headers.append('Origin',window.location.origin.toString());
-        console.log("Bearer " + token)
+        // console.log("Bearer " + token)
         headers.append('Authorization', "Bearer " + token)
-        console.log(process.env.REACT_APP_API_URL+"/big_olympiads")
+        // console.log(process.env.REACT_APP_API_URL+"/big_olympiads")
         fetch(process.env.REACT_APP_API_URL+"/big_olympiads", {
             mode: 'cors',
             credentials: "omit",
@@ -175,7 +175,7 @@ const [level, setLevel] = useState()
         })
             .then(response => response.json())
             .then(json =>{
-                console.log(json.olympiads)
+                // console.log(json.olympiads)
                 setOlympiads(json.olympiads)
             })
             .catch(error => console.log('Authorization failed: ' + error.message));

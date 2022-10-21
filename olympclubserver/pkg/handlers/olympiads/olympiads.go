@@ -7,7 +7,6 @@ import (
 	"OlympClub/pkg/database/sessions"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -106,7 +105,7 @@ func (h *OlympiadHandler) GetOlympiads(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(ans)
 		return
 	}
-	fmt.Println(olympiads)
+	// fmt.Println(olympiads)
 	w.WriteHeader(http.StatusOK)
 	ans["olympiads"] = olympiads
 	json.NewEncoder(w).Encode(ans)
@@ -126,7 +125,7 @@ func (h *OlympiadHandler) GetBigOlympiads(w http.ResponseWriter, r *http.Request
 		json.NewEncoder(w).Encode(ans)
 		return
 	}
-	fmt.Println(olympiads)
+	// fmt.Println(olympiads)
 	w.WriteHeader(http.StatusOK)
 	ans["olympiads"] = olympiads
 	json.NewEncoder(w).Encode(ans)
@@ -162,7 +161,7 @@ func (h *OlympiadHandler) GetBigOlympiad(w http.ResponseWriter, r *http.Request)
 
 	w.WriteHeader(http.StatusOK)
 	ans["big_olympiad"] = bigOlympiads[0]
-	fmt.Println(ans)
+	// fmt.Println(ans)
 	json.NewEncoder(w).Encode(ans)
 }
 
@@ -210,7 +209,7 @@ func (h *OlympiadHandler) GetOlympiadById(w http.ResponseWriter, r *http.Request
 		json.NewEncoder(w).Encode(ans)
 		return
 	}
-	fmt.Println(olympiads)
+	// fmt.Println(olympiads)
 	if len(olympiads) != 0 {
 		w.WriteHeader(http.StatusOK)
 		ans["olympiad"] = olympiads[0]
@@ -266,7 +265,7 @@ func (h *OlympiadHandler) GetOlympiadNewsById(w http.ResponseWriter, r *http.Req
 		json.NewEncoder(w).Encode(ans)
 		return
 	}
-	fmt.Println(olympiads)
+	// fmt.Println(olympiads)
 	if len(olympiads) != 0 {
 		olympiad := olympiads[0]
 
@@ -276,7 +275,7 @@ func (h *OlympiadHandler) GetOlympiadNewsById(w http.ResponseWriter, r *http.Req
 			Key:   olympiad.ID,
 		}
 		news, err := h.NewsModel.GetNews(newsFiler)
-		fmt.Println(err, news)
+		// fmt.Println(err, news)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			ans["error"] = "Problem with Database"
@@ -331,10 +330,10 @@ func (h *OlympiadHandler) GetOlympiadsByBigOlympiadId(w http.ResponseWriter, r *
 		json.NewEncoder(w).Encode(ans)
 		return
 	}
-	fmt.Println(olympiads)
+	// fmt.Println(olympiads)
 	w.WriteHeader(http.StatusOK)
 	ans["olympiads"] = olympiads
-	fmt.Println(ans)
+	// fmt.Println(ans)
 	json.NewEncoder(w).Encode(ans)
 }
 
@@ -373,7 +372,7 @@ func (h *OlympiadHandler) GetUserOlympiads(w http.ResponseWriter, r *http.Reques
 			json.NewEncoder(w).Encode(ans)
 			return
 		}
-		fmt.Println(olympiads)
+		// fmt.Println(olympiads)
 		w.WriteHeader(http.StatusOK)
 		ans["olympiads"] = olympiads
 		json.NewEncoder(w).Encode(ans)
@@ -400,7 +399,7 @@ func (h *OlympiadHandler) AddOlympiadToUser(w http.ResponseWriter, r *http.Reque
 		}
 		token = token[7:]
 		session, err := h.SessionModel.GetSessions(token)
-		fmt.Println(session)
+		// fmt.Println(session)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			ans["error"] = "Problem with Database"
@@ -415,7 +414,7 @@ func (h *OlympiadHandler) AddOlympiadToUser(w http.ResponseWriter, r *http.Reque
 		}
 		eventStr := mux.Vars(r)["olympiad_id"]
 		eventID, err := strconv.Atoi(eventStr)
-		fmt.Println(eventStr)
+		// fmt.Println(eventStr)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			ans["error"] = "Wrong format of olympiad"
@@ -423,7 +422,7 @@ func (h *OlympiadHandler) AddOlympiadToUser(w http.ResponseWriter, r *http.Reque
 			return
 		}
 		err = h.OlympiadUserModel.CreateConnection(session[0].UserID, int32(eventID))
-		fmt.Println(err)
+		// fmt.Println(err)
 		if errors.Is(err, olympiads.ErrConnectionExists) {
 			w.WriteHeader(http.StatusBadRequest)
 			ans["error"] = "Is already subscribed"

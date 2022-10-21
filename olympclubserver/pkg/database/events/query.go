@@ -47,6 +47,6 @@ func GetQueryEventOptions(filter EventFilter) (string, []interface{}) {
 		count += 1
 		inters = append(inters, filter.HolderID)
 	}
-	fmt.Println(query)
+	// fmt.Println(query)
 	return query, inters
 }

@@ -53,7 +53,7 @@ func (table *OlympiadTable) CreateOlympiad(olympiad Olympiad) (Olympiad, error) 
 	table.mtx.Lock()
 	defer table.mtx.Unlock()
 	err = table.Connection.QueryRow(context.Background(), "insert into \"OlympiadModel\" (Name, Subject, Level, Img, Short, Big_Olympiad_ID, Status, Grade, Holder_Id, Website) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id;", olympiad.Name, olympiad.Subject, olympiad.Level, olympiad.Img, olympiad.Short, olympiad.BigOlympiadID, olympiad.Status, olympiad.Grade, olympiad.HolderID, olympiad.Website).Scan(&olympiad.ID)
-	fmt.Println("lel", err)
+	// fmt.Println("lel", err)
 	if err != nil {
 		return Olympiad{}, err
 	}
@@ -97,7 +97,7 @@ func (table *OlympiadUserTable) GetOlympiads(userID int32) ([]Olympiad, error) {
 	olympiads := []Olympiad{}
 	for rows.Next() {
 		values, err := rows.Values()
-		fmt.Println(err)
+		// fmt.Println(err)
 		if err != nil {
 			log.Fatal("error while iterating dataset")
 		}

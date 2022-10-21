@@ -2,7 +2,6 @@ package holders
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"sync"
 
@@ -31,7 +30,7 @@ func (table *HolderTable) InsertHolder(holder Holder) error {
 	table.mtx.Lock()
 	defer table.mtx.Unlock()
 	err := table.Connection.QueryRow(context.Background(), "insert into \"HolderModel\" (name, logo) VALUES($1, $2) RETURNING holder_id;", holder.Name, holder.Logo).Scan(&holder.ID)
-	fmt.Println(err)
+	// fmt.Println(err)
 	return err
 }
 

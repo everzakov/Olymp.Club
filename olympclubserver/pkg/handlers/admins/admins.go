@@ -9,7 +9,6 @@ import (
 	"OlympClub/pkg/database/sessions"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -52,7 +51,7 @@ func (h *AdminHandler) GetAdmins(w http.ResponseWriter, r *http.Request) {
 		token := r.Header.Get("Authorization")
 		token = token[7:]
 		session, err := h.SessionModel.GetSessions(token)
-		fmt.Println(session)
+		// fmt.Println(session)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			ans["error"] = "Problem with Database"
@@ -92,7 +91,7 @@ func (h *AdminHandler) CheckAdmin(w http.ResponseWriter, r *http.Request) {
 		token := r.Header.Get("Authorization")
 		token = token[7:]
 		session, err := h.SessionModel.GetSessions(token)
-		fmt.Println(session)
+		// fmt.Println(session)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			ans["error"] = "Problem with Database"
@@ -144,7 +143,7 @@ func (h *AdminHandler) PostHolder(w http.ResponseWriter, r *http.Request) {
 		}
 		token = token[7:]
 		session, err := h.SessionModel.GetSessions(token)
-		fmt.Println(session)
+		// fmt.Println(session)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			ans["error"] = "Problem with Database"
@@ -196,7 +195,7 @@ func (h *AdminHandler) PostHolder(w http.ResponseWriter, r *http.Request) {
 			Name: name,
 			Logo: image.Filename,
 		}
-		fmt.Println(holder)
+		// fmt.Println(holder)
 		h.HolderTable.InsertHolder(holder)
 	}
 	w.WriteHeader(http.StatusOK)
@@ -220,7 +219,7 @@ func (h *AdminHandler) PostBigOlympiad(w http.ResponseWriter, r *http.Request) {
 		}
 		token = token[7:]
 		session, err := h.SessionModel.GetSessions(token)
-		fmt.Println(session)
+		// fmt.Println(session)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			ans["error"] = "Problem with Database"
@@ -278,7 +277,7 @@ func (h *AdminHandler) PostBigOlympiad(w http.ResponseWriter, r *http.Request) {
 			Status:      status,
 			Logo:        image.Filename,
 		}
-		fmt.Println(bigOlympiad)
+		//fmt.Println(bigOlympiad)
 		_, err = h.BigOlympiadModel.CreateBigOlympiad(bigOlympiad)
 		if errors.Is(err, olympiads.ErrBigOlympiadIsAlreadyExisted) {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -314,7 +313,7 @@ func (h *AdminHandler) PostOlympiad(w http.ResponseWriter, r *http.Request) {
 		}
 		token = token[7:]
 		session, err := h.SessionModel.GetSessions(token)
-		fmt.Println(session)
+		// fmt.Println(session)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			ans["error"] = "Problem with Database"
@@ -376,7 +375,7 @@ func (h *AdminHandler) PostOlympiad(w http.ResponseWriter, r *http.Request) {
 		}
 		bigOlympiad := r.PostFormValue("big_olympiad")
 		bigOlympiadId, err := strconv.Atoi(bigOlympiad)
-		fmt.Println("ok")
+		// fmt.Println("ok")
 
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
@@ -399,7 +398,7 @@ func (h *AdminHandler) PostOlympiad(w http.ResponseWriter, r *http.Request) {
 			HolderID:      int32(holderId),
 			Img:           image.Filename,
 		}
-		fmt.Println(bigOlympiad)
+		// fmt.Println(bigOlympiad)
 		_, err = h.OlympiadModel.CreateOlympiad(olympiad)
 		if errors.Is(err, olympiads.ErrOlympiadIsAlreadyExisted) {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -435,7 +434,7 @@ func (h *AdminHandler) PostEvent(w http.ResponseWriter, r *http.Request) {
 		}
 		token = token[7:]
 		session, err := h.SessionModel.GetSessions(token)
-		fmt.Println(session)
+		// fmt.Println(session)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			ans["error"] = "Problem with Database"
@@ -492,7 +491,7 @@ func (h *AdminHandler) PostEvent(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(ans)
 			return
 		}
-		fmt.Println("ok")
+		// fmt.Println("ok")
 
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
@@ -513,7 +512,7 @@ func (h *AdminHandler) PostEvent(w http.ResponseWriter, r *http.Request) {
 			Description: description,
 			Img:         image.Filename,
 		}
-		fmt.Println(event)
+		// fmt.Println(event)
 		_, err = h.EventModel.CreateEvent(event)
 		if errors.Is(err, olympiads.ErrOlympiadIsAlreadyExisted) {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -549,7 +548,7 @@ func (h *AdminHandler) PostNews(w http.ResponseWriter, r *http.Request) {
 		}
 		token = token[7:]
 		session, err := h.SessionModel.GetSessions(token)
-		fmt.Println(session)
+		// fmt.Println(session)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			ans["error"] = "Problem with Database"
@@ -594,7 +593,7 @@ func (h *AdminHandler) PostNews(w http.ResponseWriter, r *http.Request) {
 			Key:         int32(key),
 			Description: description,
 		}
-		fmt.Println(news)
+		// fmt.Println(news)
 		err = h.NewsModel.InsertNews(news)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)

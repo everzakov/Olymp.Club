@@ -82,7 +82,7 @@ func GetQueryOlympiadOptions(filter OlympiadFilter) (string, []interface{}) {
 		count += 1
 		inters = append(inters, filter.OlympiadShort)
 	}
-	fmt.Println(query)
+	// fmt.Println(query)
 	return query, inters
 }
 
@@ -130,6 +130,6 @@ func GetQueryBigOlympiadOptions(filter BigOlympiadFilter) (string, []interface{}
 		count += 1
 		inters = append(inters, filter.ID)
 	}
-	fmt.Println(query)
+	// fmt.Println(query)
 	return query, inters
 }

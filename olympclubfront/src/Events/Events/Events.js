@@ -15,7 +15,7 @@ class Events extends React.Component {
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         headers.append('Origin',window.location.origin.toString());
-        console.log(process.env.REACT_APP_API_URL+"/events")
+        // console.log(process.env.REACT_APP_API_URL+"/events")
         fetch(process.env.REACT_APP_API_URL+"/events", {
             mode: 'cors',
             credentials: "omit",
@@ -33,14 +33,14 @@ class Events extends React.Component {
                         headers: headers
                     }).then(response => response.json())
                         .then(json => {
-                            console.log(json)
+                            // console.log(json)
                             let events = this.state.events
                             events[index].holder = json.holder
                             this.setState({events: events})
                         })
                         .catch(error => console.log('Authorization failed: ' + error.message))
                 })
-                console.log(events)
+                // console.log(events)
                 this.setState({events: json.events})
             })
             .catch(error => console.log('Authorization failed: ' + error.message));

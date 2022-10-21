@@ -23,7 +23,6 @@ const Account = ({token, setToken}) => {
 
     let handleQuit = (e) => {
         e.preventDefault()
-        console.log()
         cookies.remove("token")
         setToken()
         navigate("/")
@@ -34,9 +33,9 @@ const Account = ({token, setToken}) => {
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         headers.append('Origin',window.location.origin.toString());
-        console.log("Bearer " + token)
+        // console.log("Bearer " + token)
         headers.append('Authorization', "Bearer " + token)
-        console.log(process.env.REACT_APP_API_URL+"/events/my")
+        // console.log(process.env.REACT_APP_API_URL+"/events/my")
         fetch(process.env.REACT_APP_API_URL+"/events/my", {
             mode: 'cors',
             credentials: "omit",
@@ -62,9 +61,9 @@ const Account = ({token, setToken}) => {
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         headers.append('Origin',window.location.origin.toString());
-        console.log("Bearer " + token)
+        // console.log("Bearer " + token)
         headers.append('Authorization', "Bearer " + token)
-        console.log(process.env.REACT_APP_API_URL+"/olympiads/my")
+        // console.log(process.env.REACT_APP_API_URL+"/olympiads/my")
         fetch(process.env.REACT_APP_API_URL+"/olympiads/my", {
             mode: 'cors',
             credentials: "omit",
@@ -78,7 +77,7 @@ const Account = ({token, setToken}) => {
         })
             .then(response => response.json())
             .then(json =>{
-                console.log(json.olympiads)
+                // console.log(json.olympiads)
                 setOlympiadValue(json.olympiads)
             })
             .catch(error => console.log('Authorization failed: ' + error.message));
@@ -90,9 +89,9 @@ const Account = ({token, setToken}) => {
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         headers.append('Origin',window.location.origin.toString());
-        console.log("Bearer " + token)
+        // console.log("Bearer " + token)
         headers.append('Authorization', "Bearer " + token)
-        console.log(process.env.REACT_APP_API_URL+"/admin/check")
+        // console.log(process.env.REACT_APP_API_URL+"/admin/check")
         fetch(process.env.REACT_APP_API_URL+"/admin/check", {
             mode: 'cors',
             credentials: "omit",

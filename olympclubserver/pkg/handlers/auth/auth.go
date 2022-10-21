@@ -8,7 +8,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"html/template"
 	"net/http"
 	"net/smtp"
@@ -250,7 +249,7 @@ func (h *AuthHandler) PostRegisterForm(w http.ResponseWriter, r *http.Request) {
 		}
 		tmpl := template.New("mail")
 		if tmpl, err = tmpl.Parse(mailTmpl); err != nil {
-			fmt.Println(err)
+			// fmt.Println(err)
 		}
 		var buf bytes.Buffer
 		tmpl.Execute(&buf, mail)
@@ -261,7 +260,7 @@ func (h *AuthHandler) PostRegisterForm(w http.ResponseWriter, r *http.Request) {
 		msg := []byte(subject + mime + buf.String())
 		_ = smtp.SendMail(h.MailInfo.Addr, auth, h.MailInfo.From, to, msg)
 
-		fmt.Println("email: ", f.Email, f.PassHash)
+		// fmt.Println("email: ", f.Email, f.PassHash)
 	}
 
 	ans := make(map[string]interface{})
@@ -278,7 +277,7 @@ func (h *AuthHandler) VerifyUser(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	token1 := r.URL.Query().Get("token1")
 	token2 := r.URL.Query().Get("token2")
-	fmt.Println(token1, token2)
+	// fmt.Println(token1, token2)
 	if r.Method == "GET" {
 		uc_users, err := h.UnConfirmedUsersTable.GetUsersByTokens(token1, token2)
 		if err != nil {
@@ -311,7 +310,7 @@ func (h *AuthHandler) VerifyUser(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		_, err = h.UnConfirmedUsersTable.ConfirmUser(token1, token2)
-		fmt.Println(err)
+		// fmt.Println(err)
 		if err != nil {
 			ans := make(map[string]interface{})
 			w.WriteHeader(http.StatusBadRequest)
@@ -374,7 +373,7 @@ func (h *AuthHandler) PostChangePasswordRequestForm(w http.ResponseWriter, r *ht
 		err := json.NewDecoder(r.Body).Decode(&f)
 		email := f.Email
 		users, err := h.UsersModel.GetUsersByEmail(email)
-		fmt.Println(err)
+		// fmt.Println(err)
 		if errors.Is(err, unconfirmed.ErrUserDoesntExists) {
 			ans := make(map[string]interface{})
 			w.WriteHeader(http.StatusInternalServerError)
@@ -399,7 +398,7 @@ func (h *AuthHandler) PostChangePasswordRequestForm(w http.ResponseWriter, r *ht
 		}
 		tmpl := template.New("mail")
 		if tmpl, err = tmpl.Parse(changePasswordTmpl); err != nil {
-			fmt.Println(err)
+			// fmt.Println(err)
 		}
 		var buf bytes.Buffer
 		tmpl.Execute(&buf, mail)
