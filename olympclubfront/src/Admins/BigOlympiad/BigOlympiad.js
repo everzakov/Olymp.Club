@@ -45,22 +45,11 @@ const AddBigOlympiad = ({token}) => {
         formData.append("short", short);
         formData.append("description", description);
 
-        // formData.append("holder-name", name);
 
         let headers = new Headers();
-        // headers.append('Type', "formData");
         headers.append('Origin',window.location.origin.toString());
-        // headers.append("Content-Type", "multipart/form-data")
-        /*headers.append("Content-Type", "multipart/form-data; boundary=AaB03x" +
-            "--AaB03x" +
-            "Content-Disposition: file" +
-            "Content-Type: png" +
-            "Content-Transfer-Encoding: binary" +
-            "...data... " +
-            "--AaB03x--")*/
         headers.append("Authorization", "Bearer " + token)
-        // headers.append("X-CSRF-Token", csrfToken)
-        // console.log(process.env.REACT_APP_API_URL+"/admin/big_olympiad")
+
         fetch(process.env.REACT_APP_API_URL+"/admin/big_olympiad", {
             mode: 'cors',
             credentials: "omit",
@@ -69,10 +58,8 @@ const AddBigOlympiad = ({token}) => {
             body:formData
         })
             .then(response => {
-                // console.log(response.status)
                 if (response.status !== 200) {
                     response.json().then((errorJson) => {
-                        // console.log(errorJson.error)
                         toast(errorJson.error)
                     });
                 }else{

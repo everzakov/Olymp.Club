@@ -58,22 +58,12 @@ const [website, setWebsite] = useState()
         formData.append("website", website);
         formData.append("holder", e.target.holder.value);
 
-        // formData.append("holder-name", name);
 
         let headers = new Headers();
-        // headers.append('Type', "formData");
         headers.append('Origin',window.location.origin.toString());
-        // headers.append("Content-Type", "multipart/form-data")
-        /*headers.append("Content-Type", "multipart/form-data; boundary=AaB03x" +
-            "--AaB03x" +
-            "Content-Disposition: file" +
-            "Content-Type: png" +
-            "Content-Transfer-Encoding: binary" +
-            "...data... " +
-            "--AaB03x--")*/
+
         headers.append("Authorization", "Bearer " + token)
-        // headers.append("X-CSRF-Token", csrfToken)
-        // console.log(process.env.REACT_APP_API_URL+"/admin/event")
+
         fetch(process.env.REACT_APP_API_URL+"/admin/event", {
             mode: 'cors',
             credentials: "omit",
@@ -82,10 +72,8 @@ const [website, setWebsite] = useState()
             body:formData
         })
             .then(response => {
-                // console.log(response.status)
                 if (response.status !== 200) {
                     response.json().then((errorJson) => {
-                        // console.log(errorJson.error)
                         toast(errorJson.error)
                     });
                 }else{
@@ -104,9 +92,7 @@ const [website, setWebsite] = useState()
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         headers.append('Origin',window.location.origin.toString());
-        // console.log("Bearer " + token)
         headers.append('Authorization', "Bearer " + token)
-        // console.log(process.env.REACT_APP_API_URL+"/holders")
         fetch(process.env.REACT_APP_API_URL+"/holders", {
             mode: 'cors',
             credentials: "omit",
@@ -119,7 +105,6 @@ const [website, setWebsite] = useState()
         })
             .then(response => response.json())
             .then(json =>{
-                // console.log(json.holders)
                 setHolders(json.holders)
             })
             .catch(error => console.log('Authorization failed: ' + error.message));

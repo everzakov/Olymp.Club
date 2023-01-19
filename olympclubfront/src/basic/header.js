@@ -5,7 +5,6 @@ import {useState} from "react"
 import classes from "./header.scss";
 
 const Header = ({token}) => {
-    // console.log(token)
     if (token == undefined) {
         return (
             <div className="base-bar">

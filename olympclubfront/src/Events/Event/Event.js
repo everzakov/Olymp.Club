@@ -24,7 +24,6 @@ const Event = ({token}) => {
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         headers.append('Origin',window.location.origin.toString());
-        // console.log(process.env.REACT_APP_API_URL+"/event/" + eventID +  "/news")
         fetch(process.env.REACT_APP_API_URL+"/event/" + eventID + "/news", {
             mode: 'cors',
             credentials: "omit",
@@ -33,7 +32,6 @@ const Event = ({token}) => {
         })
             .then(response => response.json())
             .then(json =>{
-                // console.log(json.news)
                 setNews(json.news)
             })
             .catch(error => console.log('Authorization failed: ' + error.message));
@@ -44,7 +42,6 @@ const Event = ({token}) => {
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         headers.append('Origin',window.location.origin.toString());
-        // console.log(process.env.REACT_APP_API_URL+"/holder/" + event.holder_id)
         fetch(process.env.REACT_APP_API_URL+"/holder/" + event.holder_id, {
             mode: 'cors',
             credentials: "omit",
@@ -53,7 +50,6 @@ const Event = ({token}) => {
         })
             .then(response => response.json())
             .then(json =>{
-                // console.log(json)
                 event.holder = json.holder
                 setValue(event)
             })
@@ -66,7 +62,6 @@ const Event = ({token}) => {
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         headers.append('Origin',window.location.origin.toString());
-        // console.log(process.env.REACT_APP_API_URL+"/event/" + eventID)
         fetch(process.env.REACT_APP_API_URL+"/event/" + eventID, {
             mode: 'cors',
             credentials: "omit",
@@ -75,7 +70,6 @@ const Event = ({token}) => {
         })
             .then(response => response.json())
             .then(json =>{
-                // console.log(json)
                 getHolder(json.event)
                 })
             .catch(error => console.log('Authorization failed: ' + error.message));
@@ -93,9 +87,7 @@ const Event = ({token}) => {
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         headers.append('Origin',window.location.origin.toString());
-        // console.log(token)
         headers.append('Authorization', "Bearer " + token)
-        // console.log(process.env.REACT_APP_API_URL+"/event/" + eventID + "/add")
         fetch(process.env.REACT_APP_API_URL+"/event/" + eventID + "/add", {
             mode: 'cors',
             credentials: "omit",

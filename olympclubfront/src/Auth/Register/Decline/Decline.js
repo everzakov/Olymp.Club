@@ -22,10 +22,8 @@ const RegisterDecline= () => {
             headers: headers
         })
             .then(response => {
-                // console.log(response.status)
                 if (response.status != 200) {
                     response.json().then((errorJson) => {
-                        // console.log(errorJson.error)
                         setReason(errorJson.error)
                     });
                 }else{

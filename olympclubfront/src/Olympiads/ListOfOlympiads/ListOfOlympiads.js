@@ -3,7 +3,6 @@ import classes from './ListOfOlympiads.scss'
 import {Link} from "react-router-dom";
 
 const ListOfOlympiads = ({olympiads, token}) => {
-    // console.log("ListOfOlympiads", olympiads)
     return (
         <div className={`${classes.olympiadContainer} olympiadContainer`}>
             {olympiads.map((item, index) => (

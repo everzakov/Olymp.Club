@@ -44,16 +44,10 @@ const PasswordChange = () => {
             toast("Passwords should be the same")
             return
         }
-        // console.log(formValues)
         let headers = new Headers();
         headers.append('Accept', 'application/x-www-form-urlencoded');
         headers.append('Origin',window.location.origin.toString());
         headers.append("Content-Type", 'application/json');
-        // headers.append("X-CSRF-Token", csrfToken)
-        // console.log(process.env.REACT_APP_API_URL+"/password/change/post?token1=" + token1 + "&token2="+token2 )
-        // console.log(JSON.stringify({
-        //     "email": formValues.email,
-        // }))
         fetch(process.env.REACT_APP_API_URL+"/password/change/post?token1=" + token1 + "&token2="+token2 , {
             mode: 'cors',
             credentials: "omit",
@@ -66,7 +60,6 @@ const PasswordChange = () => {
             .then(response => {
                 if (response.status !== 200) {
                     response.json().then((errorJson) => {
-                        // console.log(errorJson.error)
                         toast(errorJson.error)
                     });
                 }else{

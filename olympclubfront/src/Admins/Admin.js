@@ -24,7 +24,6 @@ const AdminPanel = ({token}) => {
             headers: headers
         })
             .then(response => {
-                // console.log(response.status)
                 if (response.status === 401) {
                     cookies.remove("token")
                     navigate("/")

@@ -4,11 +4,8 @@ import {useEffect, useState} from "react";
 import classes from "./BigOlympiad.scss";
 
 const BigOlympiad = ({token}) => {
-    // console.log("token", token)
     let match = useLocation();
     const params = useParams();
-    // console.log(params.bigOlympiad)
-    // console.log(match.url)
     const [olympiad, setValue] = useState(0);
 
     const baseBigOlympiad = {
@@ -26,7 +23,6 @@ const BigOlympiad = ({token}) => {
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         headers.append('Origin',window.location.origin.toString());
-        // console.log(process.env.REACT_APP_API_URL+"/olympiad/" + params.bigOlympiad + "/olympiads")
         fetch(process.env.REACT_APP_API_URL+"/olympiad/" +  params.bigOlympiad + "/olympiads", {
             mode: 'cors',
             credentials: "omit",
@@ -35,7 +31,6 @@ const BigOlympiad = ({token}) => {
         })
             .then(response => response.json())
             .then(json =>{
-                // console.log(json.olympiads)
                 bigOlympiad.olympiads = json.olympiads
                 setBigOlympiadValue(bigOlympiad)
 
@@ -48,7 +43,6 @@ const BigOlympiad = ({token}) => {
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         headers.append('Origin',window.location.origin.toString());
-        // console.log(process.env.REACT_APP_API_URL+"/olympiad/" + params.bigOlympiad)
         fetch(process.env.REACT_APP_API_URL+"/olympiad/" +  params.bigOlympiad, {
             mode: 'cors',
             credentials: "omit",

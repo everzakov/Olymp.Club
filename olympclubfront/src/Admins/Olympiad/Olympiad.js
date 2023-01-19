@@ -73,7 +73,6 @@ const AddOlympiad = ({token}) => {
         setGrade(grades)
     }
     const save = (e) => {
-        // console.log("holder", e.target.holder)
         e.preventDefault()
         const formData = new FormData();
         formData.append("olympiad_logo", image);
@@ -87,22 +86,10 @@ const AddOlympiad = ({token}) => {
         formData.append("level", e.target.level.value);
         formData.append("grade", grade);
 
-        // formData.append("holder-name", name);
 
         let headers = new Headers();
-        // headers.append('Type', "formData");
         headers.append('Origin',window.location.origin.toString());
-        // headers.append("Content-Type", "multipart/form-data")
-        /*headers.append("Content-Type", "multipart/form-data; boundary=AaB03x" +
-            "--AaB03x" +
-            "Content-Disposition: file" +
-            "Content-Type: png" +
-            "Content-Transfer-Encoding: binary" +
-            "...data... " +
-            "--AaB03x--")*/
         headers.append("Authorization", "Bearer " + token)
-        // headers.append("X-CSRF-Token", csrfToken)
-        // console.log(process.env.REACT_APP_API_URL+"/admin/olympiad")
         fetch(process.env.REACT_APP_API_URL+"/admin/olympiad", {
             mode: 'cors',
             credentials: "omit",
@@ -111,10 +98,8 @@ const AddOlympiad = ({token}) => {
             body:formData
         })
             .then(response => {
-                // console.log(response.status)
                 if (response.status !== 200) {
                     response.json().then((errorJson) => {
-                        // console.log(errorJson.error)
                         toast(errorJson.error)
                     });
                 }else{
@@ -134,9 +119,7 @@ const AddOlympiad = ({token}) => {
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         headers.append('Origin',window.location.origin.toString());
-        // console.log("Bearer " + token)
         headers.append('Authorization', "Bearer " + token)
-        // console.log(process.env.REACT_APP_API_URL+"/holders")
         fetch(process.env.REACT_APP_API_URL+"/holders", {
             mode: 'cors',
             credentials: "omit",
@@ -149,7 +132,6 @@ const AddOlympiad = ({token}) => {
         })
             .then(response => response.json())
             .then(json =>{
-                // console.log(json.holders)
                 setHolders(json.holders)
             })
             .catch(error => console.log('Authorization failed: ' + error.message));
@@ -160,9 +142,7 @@ const AddOlympiad = ({token}) => {
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         headers.append('Origin',window.location.origin.toString());
-        // console.log("Bearer " + token)
         headers.append('Authorization', "Bearer " + token)
-        // console.log(process.env.REACT_APP_API_URL+"/big_olympiads")
         fetch(process.env.REACT_APP_API_URL+"/big_olympiads", {
             mode: 'cors',
             credentials: "omit",
@@ -175,7 +155,6 @@ const AddOlympiad = ({token}) => {
         })
             .then(response => response.json())
             .then(json =>{
-                // console.log(json.olympiads)
                 setOlympiads(json.olympiads)
             })
             .catch(error => console.log('Authorization failed: ' + error.message));
