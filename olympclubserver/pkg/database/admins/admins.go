@@ -17,6 +17,7 @@ type Admin struct {
 	Priority int32
 }
 
+// получить список админов
 func (table *AdminTable) GetAdmins() ([]Admin, error) {
 	admins := []Admin{}
 	rows, err := table.Connection.Query(context.Background(), "Select * from \"AdminModel\"")
@@ -24,6 +25,7 @@ func (table *AdminTable) GetAdmins() ([]Admin, error) {
 		return []Admin{}, err
 	}
 	for rows.Next() {
+		// переводим данные в список админов
 		values, err := rows.Values()
 		if err != nil {
 			log.Fatal("error while iterating dataset")
@@ -37,6 +39,7 @@ func (table *AdminTable) GetAdmins() ([]Admin, error) {
 	return admins, nil
 }
 
+// проверка что пользователь - админ
 func (table *AdminTable) CheckAdmin(userID int32) (bool, error) {
 	admins := []Admin{}
 	rows, err := table.Connection.Query(context.Background(), "Select * from \"AdminModel\" where user_id=$1", userID)

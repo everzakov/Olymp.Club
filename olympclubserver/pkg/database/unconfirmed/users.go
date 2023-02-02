@@ -31,6 +31,7 @@ var (
 	ErrProblemWithTokens      = fmt.Errorf("Problem with tokens in Database")
 )
 
+// проверяем подтверждён ли пользователь
 func (table *UnConfirmedUsersTable) IsUserConfirmed(email string) (bool, error) {
 	table.mtx.Lock()
 	defer table.mtx.Unlock()
@@ -40,12 +41,12 @@ func (table *UnConfirmedUsersTable) IsUserConfirmed(email string) (bool, error) 
 	}
 	users := []UnConfirmedUser{}
 	for rows.Next() {
+		// переводим данные в список
 		values, err := rows.Values()
 		if err != nil {
 			return false, err
 		}
 		unConfirmedUser := UnConfirmedUser{}
-		// convert DB types to Go types
 		unConfirmedUser.ID = values[0].(int32)
 		unConfirmedUser.Email = values[1].(string)
 		unConfirmedUser.Token1 = values[2].(string)
@@ -57,6 +58,7 @@ func (table *UnConfirmedUsersTable) IsUserConfirmed(email string) (bool, error) 
 	return len(users) > 0, nil
 }
 
+// создать неподтверждённого пользователя
 func (table *UnConfirmedUsersTable) CreateUnconfirmedUser(email, pass_hash string) (UnConfirmedUser, error) {
 	confirmed, err := table.IsUserConfirmed(email)
 	table.mtx.Lock()
@@ -83,6 +85,7 @@ func (table *UnConfirmedUsersTable) CreateUnconfirmedUser(email, pass_hash strin
 	return user, nil
 }
 
+// получить пользователь по токенам
 func (table *UnConfirmedUsersTable) GetUsersByTokens(token1, token2 string) ([]UnConfirmedUser, error) {
 	table.mtx.Lock()
 	defer table.mtx.Unlock()
@@ -112,6 +115,7 @@ func (table *UnConfirmedUsersTable) GetUsersByTokens(token1, token2 string) ([]U
 	return users, nil
 }
 
+// подтвердить пользователя
 func (table *UnConfirmedUsersTable) ConfirmUser(token1, token2 string) (user_model.User, error) {
 	users, err := table.GetUsersByTokens(token1, token2)
 	table.mtx.Lock()
@@ -144,6 +148,7 @@ func (table *UnConfirmedUsersTable) ConfirmUser(token1, token2 string) (user_mod
 	return user, nil
 }
 
+// удалить пользователя
 func (table *UnConfirmedUsersTable) DeleteUser(token1, token2 string) error {
 	users, err := table.GetUsersByTokens(token1, token2)
 	table.mtx.Lock()

@@ -48,8 +48,8 @@ func (table *EventTable) CreateEvent(event Event) (Event, error) {
 	}
 	table.mtx.Lock()
 	defer table.mtx.Unlock()
+	// получаем строку с новым мероприятием
 	err = table.Connection.QueryRow(context.Background(), "insert into \"EventModel\" (\"Name\", \"Description\", \"Short\", \"Img\", \"Status\", \"HolderId\", \"Website\") VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING id;", event.Name, event.Description, event.Short, event.Img, event.Status, event.HolderID, event.Website).Scan(&event.ID)
-	// fmt.Println(err)
 	if err != nil {
 		return Event{}, err
 	}
@@ -60,9 +60,10 @@ func (table *EventTable) GetEvents(filter EventFilter) ([]Event, error) {
 	table.mtx.Lock()
 	defer table.mtx.Unlock()
 	events := []Event{}
+
+	// получаем query из фильтра
 	queryString, queryArgs := GetQueryEventOptions(filter)
 	rows, err := table.Connection.Query(context.Background(), queryString, queryArgs...)
-	// fmt.Println(err)
 	if err != nil {
 		return []Event{}, err
 	}
@@ -71,6 +72,7 @@ func (table *EventTable) GetEvents(filter EventFilter) ([]Event, error) {
 		if err != nil {
 			log.Fatal("error while iterating dataset")
 		}
+		// переводим данные в список мероприятий
 		event := Event{}
 		event.ID = values[0].(int32)
 		event.Name = values[1].(string)
@@ -85,22 +87,20 @@ func (table *EventTable) GetEvents(filter EventFilter) ([]Event, error) {
 	return events, nil
 }
 
+// получаем мероприятий, на которые подписался пользователь
 func (table *EventUserTable) GetEvents(userID int32) ([]Event, error) {
 	table.mtx.Lock()
 	defer table.mtx.Unlock()
 	rows, err := table.Connection.Query(context.Background(), "select em.* from \"EventUserModel\" as eu left outer join \"EventModel\" as em on eu.event_id = em.id where eu.user_id=$1", userID)
-	// fmt.Println(err)
 	if err != nil {
 		return []Event{}, err
 	}
 	events := []Event{}
 	for rows.Next() {
 		values, err := rows.Values()
-		// fmt.Println(err)
 		if err != nil {
 			log.Fatal("error while iterating dataset")
 		}
-		// fmt.Println(len(values), values)
 		event := Event{}
 		event.ID = values[0].(int32)
 		event.Name = values[1].(string)
@@ -115,6 +115,7 @@ func (table *EventUserTable) GetEvents(userID int32) ([]Event, error) {
 	return events, nil
 }
 
+// создать связь между пользователем и мероприятием
 func (table *EventUserTable) CreateConnection(userID, eventID int32) error {
 	events, err := table.GetEvents(userID)
 	if err != nil {
@@ -138,6 +139,7 @@ func (table *EventUserTable) CreateConnection(userID, eventID int32) error {
 	return nil
 }
 
+// удалить связь между пользователем и мероприятием
 func (table *EventUserTable) DeleteConnection(userID, eventID int32) error {
 	events, err := table.GetEvents(userID)
 	if err != nil {

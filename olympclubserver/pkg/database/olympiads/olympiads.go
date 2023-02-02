@@ -40,6 +40,7 @@ var (
 )
 
 func (table *OlympiadTable) CreateOlympiad(olympiad Olympiad) (Olympiad, error) {
+	// проверяем что такой олимпиады нет
 	filter := NewOlympiadFilter()
 	filter.OlympiadShort = olympiad.Short
 	filter.BigOlympiadID = olympiad.BigOlympiadID
@@ -52,8 +53,9 @@ func (table *OlympiadTable) CreateOlympiad(olympiad Olympiad) (Olympiad, error) 
 	}
 	table.mtx.Lock()
 	defer table.mtx.Unlock()
+
+	// создаём олимпиаду
 	err = table.Connection.QueryRow(context.Background(), "insert into \"OlympiadModel\" (Name, Subject, Level, Img, Short, Big_Olympiad_ID, Status, Grade, Holder_Id, Website) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id;", olympiad.Name, olympiad.Subject, olympiad.Level, olympiad.Img, olympiad.Short, olympiad.BigOlympiadID, olympiad.Status, olympiad.Grade, olympiad.HolderID, olympiad.Website).Scan(&olympiad.ID)
-	// fmt.Println("lel", err)
 	if err != nil {
 		return Olympiad{}, err
 	}
@@ -62,12 +64,14 @@ func (table *OlympiadTable) CreateOlympiad(olympiad Olympiad) (Olympiad, error) 
 
 func (table *OlympiadTable) GetOlympiads(filter OlympiadFilter) ([]Olympiad, error) {
 	olympiads := []Olympiad{}
+	// переводим фильтр в query
 	queryString, queryArgs := GetQueryOlympiadOptions(filter)
 	rows, err := table.Connection.Query(context.Background(), queryString, queryArgs...)
 	if err != nil {
 		return []Olympiad{}, err
 	}
 	for rows.Next() {
+		// переводим данные в список олимпиад
 		values, err := rows.Values()
 		if err != nil {
 			log.Fatal("error while iterating dataset")
@@ -89,6 +93,7 @@ func (table *OlympiadTable) GetOlympiads(filter OlympiadFilter) ([]Olympiad, err
 	return olympiads, nil
 }
 
+// получаем олимпиады пользователя
 func (table *OlympiadUserTable) GetOlympiads(userID int32) ([]Olympiad, error) {
 	rows, err := table.Connection.Query(context.Background(), "select om.* from \"OlympiadUserModel\" as ou left outer join \"OlympiadModel\" as om on ou.olympiad_id = om.id where ou.user_id=$1", userID)
 	if err != nil {
@@ -96,8 +101,8 @@ func (table *OlympiadUserTable) GetOlympiads(userID int32) ([]Olympiad, error) {
 	}
 	olympiads := []Olympiad{}
 	for rows.Next() {
+		// переводим данные в список олимпиад
 		values, err := rows.Values()
-		// fmt.Println(err)
 		if err != nil {
 			log.Fatal("error while iterating dataset")
 		}
@@ -118,6 +123,7 @@ func (table *OlympiadUserTable) GetOlympiads(userID int32) ([]Olympiad, error) {
 	return olympiads, nil
 }
 
+// Создаём связь межды пользователем и олимпиадой
 func (table *OlympiadUserTable) CreateConnection(userID, olympiadID int32) error {
 	olympiads, err := table.GetOlympiads(userID)
 	if err != nil {
@@ -141,6 +147,7 @@ func (table *OlympiadUserTable) CreateConnection(userID, olympiadID int32) error
 	return nil
 }
 
+// удаляем связь межды пользователем и олимпиадой
 func (table *OlympiadUserTable) DeleteConnection(userID, olympiadID int32) error {
 	olympiads, err := table.GetOlympiads(userID)
 	if err != nil {

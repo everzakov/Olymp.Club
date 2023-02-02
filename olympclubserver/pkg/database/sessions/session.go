@@ -20,6 +20,7 @@ type Session struct {
 	Time   time.Time
 }
 
+// получить сессию по токену
 func (table *SessionModel) GetSessions(token string) ([]Session, error) {
 	sessions := []Session{}
 	queryString := "Select * from \"SessionModel\" where token=$1"
@@ -28,6 +29,7 @@ func (table *SessionModel) GetSessions(token string) ([]Session, error) {
 		return []Session{}, err
 	}
 	for rows.Next() {
+		// переводим данные в список сессий
 		values, err := rows.Values()
 		if err != nil {
 			log.Fatal("error while iterating dataset")
@@ -42,6 +44,7 @@ func (table *SessionModel) GetSessions(token string) ([]Session, error) {
 	return sessions, nil
 }
 
+// получить сессии по id пользователя
 func (table *SessionModel) GetSessionsByUserID(userID int32) ([]Session, error) {
 	sessions := []Session{}
 	queryString := "Select * from \"SessionModel\" where user_id=$1"
@@ -50,6 +53,7 @@ func (table *SessionModel) GetSessionsByUserID(userID int32) ([]Session, error) 
 		return []Session{}, err
 	}
 	for rows.Next() {
+		// переводим данные в список сессий
 		values, err := rows.Values()
 		if err != nil {
 			log.Fatal("error while iterating dataset")
@@ -62,6 +66,7 @@ func (table *SessionModel) GetSessionsByUserID(userID int32) ([]Session, error) 
 	return sessions, nil
 }
 
+// создаём сессию
 func (table *SessionModel) CreateSession(userID int32) (Session, error) {
 	token := utils.GenerateSecureToken()
 	session := Session{

@@ -16,6 +16,7 @@ func NewNewFilter() NewsFilter {
 	}
 }
 
+// перевод фильтр в query
 func GetQueryNewsOptions(filter NewsFilter) (string, []interface{}) {
 	inters := make([]interface{}, 0)
 	count := 1
@@ -47,6 +48,5 @@ func GetQueryNewsOptions(filter NewsFilter) (string, []interface{}) {
 		count += 1
 		inters = append(inters, filter.Key)
 	}
-	// fmt.Println(query)
 	return query, inters
 }

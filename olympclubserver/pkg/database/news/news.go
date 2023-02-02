@@ -24,23 +24,26 @@ type News struct {
 func (table *NewsTable) InsertNews(news News) error {
 	table.mtx.Lock()
 	defer table.mtx.Unlock()
+	// добавить новость
 	err := table.Connection.QueryRow(context.Background(), "insert into \"NewsModel\" (\"Title\", \"Description\", \"TableStruct\", \"Key\") VALUES($1, $2, $3, $4) RETURNING id;", news.Title, news.Description, news.Table, news.Key).Scan(&news.ID)
-	// fmt.Println(err)
 	return err
 }
 
 func (table *NewsTable) GetNews(filter NewsFilter) ([]News, error) {
 	table.mtx.Lock()
 	defer table.mtx.Unlock()
+
+	// переводим фильтр в query
 	queryString, queryArgs := GetQueryNewsOptions(filter)
 	rows, err := table.Connection.Query(context.Background(), queryString, queryArgs...)
 	if err != nil {
 		return []News{}, err
 	}
+
 	news := []News{}
 	for rows.Next() {
+		// перевод данных в список новостей
 		values, err := rows.Values()
-		// fmt.Println(err)
 		if err != nil {
 			log.Fatal("error while iterating dataset")
 		}

@@ -1,5 +1,6 @@
 package types
 
+// структура чтобы конфигурировать информацию об отправке писем
 type MailInfo struct {
 	From     string
 	User     string

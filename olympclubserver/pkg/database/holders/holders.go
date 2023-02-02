@@ -29,11 +29,13 @@ func NewHolderTable(pool *pgxpool.Pool) *HolderTable {
 func (table *HolderTable) InsertHolder(holder Holder) error {
 	table.mtx.Lock()
 	defer table.mtx.Unlock()
+
+	// добавить нового пользователя
 	err := table.Connection.QueryRow(context.Background(), "insert into \"HolderModel\" (name, logo) VALUES($1, $2) RETURNING holder_id;", holder.Name, holder.Logo).Scan(&holder.ID)
-	// fmt.Println(err)
 	return err
 }
 
+// получить организатора
 func (table *HolderTable) GetHolders(holderID int32) ([]Holder, error) {
 	table.mtx.Lock()
 	defer table.mtx.Unlock()
@@ -57,6 +59,7 @@ func (table *HolderTable) GetHolders(holderID int32) ([]Holder, error) {
 	return holders, nil
 }
 
+// получить всех организаторов
 func (table *HolderTable) GetAllHolders() ([]Holder, error) {
 	table.mtx.Lock()
 	defer table.mtx.Unlock()
@@ -67,6 +70,7 @@ func (table *HolderTable) GetAllHolders() ([]Holder, error) {
 		return []Holder{}, err
 	}
 	for rows.Next() {
+		// переводим данные в список организаторов
 		values, err := rows.Values()
 		if err != nil {
 			log.Fatal("error while iterating dataset")

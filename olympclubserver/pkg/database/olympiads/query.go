@@ -100,6 +100,7 @@ func NewBigOlympiadFilter() BigOlympiadFilter {
 	}
 }
 
+// первод фильтра в query
 func GetQueryBigOlympiadOptions(filter BigOlympiadFilter) (string, []interface{}) {
 	inters := make([]interface{}, 0)
 	count := 1
@@ -130,6 +131,5 @@ func GetQueryBigOlympiadOptions(filter BigOlympiadFilter) (string, []interface{}
 		count += 1
 		inters = append(inters, filter.ID)
 	}
-	// fmt.Println(query)
 	return query, inters
 }

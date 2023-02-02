@@ -20,6 +20,7 @@ type EventHandler struct {
 }
 
 func (h *EventHandler) RegisterHandler(r *mux.Router) {
+	// регистрируем endpoints
 	r.HandleFunc("/event", h.CreateEvent).Methods("POST")
 	r.HandleFunc("/events", h.GetEvents).Methods("GET", "OPTIONS")
 	r.HandleFunc("/events/my", h.GetUserEvents).Methods("GET", "OPTIONS")
@@ -29,10 +30,13 @@ func (h *EventHandler) RegisterHandler(r *mux.Router) {
 
 }
 
+// Создать мероприятие
 func (h *EventHandler) CreateEvent(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	w.Header().Set("Content-Type", "application/json")
 	ans := make(map[string]interface{})
+
+	// получаем необходимые данные
 	name := r.Form.Get("name")
 	description := r.Form.Get("description")
 	short := r.Form.Get("short")
@@ -47,6 +51,7 @@ func (h *EventHandler) CreateEvent(w http.ResponseWriter, r *http.Request) {
 	}
 	website := r.Form.Get("website")
 
+	// новое мероприятие
 	event := event_database.Event{
 		Name:        name,
 		Description: description,
@@ -56,6 +61,8 @@ func (h *EventHandler) CreateEvent(w http.ResponseWriter, r *http.Request) {
 		HolderID:    int32(holderID),
 		Website:     website,
 	}
+
+	// создать мероприятие
 	event, err = h.EventModel.CreateEvent(event)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -68,13 +75,19 @@ func (h *EventHandler) CreateEvent(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+// получить список мероприятий
 func (h *EventHandler) GetEvents(w http.ResponseWriter, r *http.Request) {
-	ans := make(map[string]interface{})
+	// парсим
+	r.ParseForm()
+	// выставляем переменные
 	w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.Header().Set("Content-Type", "application/json")
-	r.ParseForm()
+
+	ans := make(map[string]interface{})
+
+	// получаем информацию о мероприятии
 	eventStr := r.Form.Get("id")
 	eventId, err := strconv.Atoi(eventStr)
 	eventShort := r.Form.Get("short")
@@ -88,31 +101,37 @@ func (h *EventHandler) GetEvents(w http.ResponseWriter, r *http.Request) {
 		holderId = -1
 	}
 
+	// создаём фильтр
 	filter := event_database.EventFilter{
 		ID:       int32(eventId),
 		Short:    eventShort,
 		HolderID: int32(holderId),
 	}
+
+	// получаем события
 	events, err := h.EventModel.GetEvents(filter)
-	// fmt.Println(events)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		ans["error"] = "Problem with Database"
 		json.NewEncoder(w).Encode(ans)
 		return
 	}
-	// fmt.Println(events)
 	w.WriteHeader(http.StatusOK)
 	ans["events"] = events
 	json.NewEncoder(w).Encode(ans)
 }
 
+// получить мероприятие
 func (h *EventHandler) GetEventById(w http.ResponseWriter, r *http.Request) {
+	// выставялем переменные
 	w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.Header().Set("Content-Type", "application/json")
+
 	ans := make(map[string]interface{})
+
+	// получаем переменную из роутера
 	eventStr := mux.Vars(r)["event_id"]
 	filter := event_database.NewEventFilter()
 	eventID, err := strconv.Atoi(eventStr)
@@ -121,6 +140,8 @@ func (h *EventHandler) GetEventById(w http.ResponseWriter, r *http.Request) {
 	} else {
 		filter.ID = int32(eventID)
 	}
+
+	// получаем мероприятия
 	events, err := h.EventModel.GetEvents(filter)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -137,16 +158,20 @@ func (h *EventHandler) GetEventById(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	ans["event"] = events[0]
-	// fmt.Println(ans)
 	json.NewEncoder(w).Encode(ans)
 }
 
+// получить новости мероприятий
 func (h *EventHandler) GetEventNewsById(w http.ResponseWriter, r *http.Request) {
+	// выставить переменные
 	w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.Header().Set("Content-Type", "application/json")
+
 	ans := make(map[string]interface{})
+
+	// получить переменную из роутера
 	eventStr := mux.Vars(r)["event_id"]
 	filter := event_database.NewEventFilter()
 	eventID, err := strconv.Atoi(eventStr)
@@ -155,6 +180,8 @@ func (h *EventHandler) GetEventNewsById(w http.ResponseWriter, r *http.Request) 
 	} else {
 		filter.ID = int32(eventID)
 	}
+
+	// получаем мероприятия по фильтру
 	events, err := h.EventModel.GetEvents(filter)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -169,6 +196,8 @@ func (h *EventHandler) GetEventNewsById(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	event := events[0]
+
+	// создаём фильтр новостей
 	newsFiler := news.NewsFilter{
 		ID:    -1,
 		Table: "Events",
@@ -183,16 +212,19 @@ func (h *EventHandler) GetEventNewsById(w http.ResponseWriter, r *http.Request) 
 	}
 	w.WriteHeader(http.StatusOK)
 	ans["news"] = news
-	// fmt.Println(ans)
 	json.NewEncoder(w).Encode(ans)
 }
 
+// получить мероприятия пользователя
 func (h *EventHandler) GetUserEvents(w http.ResponseWriter, r *http.Request) {
-	ans := make(map[string]interface{})
+	// выставить переменные
 	w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
 	w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 	w.Header().Set("Content-Type", "application/json")
+
+	ans := make(map[string]interface{})
+
 	if r.Method == "GET" {
 		token := r.Header.Get("Authorization")
 		token = token[7:]
@@ -210,8 +242,6 @@ func (h *EventHandler) GetUserEvents(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		events, err := h.EventUserModel.GetEvents(session[0].UserID)
-		// fmt.Println(events)
-		// fmt.Println(events)
 		w.WriteHeader(http.StatusOK)
 		ans["events"] = events
 		json.NewEncoder(w).Encode(ans)
@@ -222,13 +252,18 @@ func (h *EventHandler) GetUserEvents(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(ans)
 }
 
+// добавить мероприятие пользователю
 func (h *EventHandler) AddEventToUser(w http.ResponseWriter, r *http.Request) {
-	ans := make(map[string]interface{})
+	// выставляем переменные
 	w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
 	w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 	w.Header().Set("Content-Type", "application/json")
+
+	ans := make(map[string]interface{})
+
 	if r.Method == "GET" {
+		// получаем токен
 		token := r.Header.Get("Authorization")
 		if len(token) < 7 {
 			w.WriteHeader(http.StatusBadRequest)
@@ -250,6 +285,8 @@ func (h *EventHandler) AddEventToUser(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(ans)
 			return
 		}
+
+		// получаем мероприятие из роутера
 		eventStr := mux.Vars(r)["event_id"]
 		eventID, err := strconv.Atoi(eventStr)
 		if err != nil {
@@ -258,6 +295,8 @@ func (h *EventHandler) AddEventToUser(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(ans)
 			return
 		}
+
+		// добавить связь между пользователем и мероприятием
 		err = h.EventUserModel.CreateConnection(session[0].UserID, int32(eventID))
 		if errors.Is(err, event_database.ErrConnectionExists) {
 			w.WriteHeader(http.StatusBadRequest)

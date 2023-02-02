@@ -30,6 +30,7 @@ type AdminHandler struct {
 }
 
 func (h *AdminHandler) RegisterHandler(r *mux.Router) {
+	// создаём саб роутер
 	admins := r.PathPrefix("/admin").Subrouter()
 	admins.HandleFunc("/check", h.CheckAdmin).Methods("GET", "OPTIONS")
 	admins.HandleFunc("/holder", h.PostHolder).Methods("POST", "OPTIONS")
@@ -37,21 +38,23 @@ func (h *AdminHandler) RegisterHandler(r *mux.Router) {
 	admins.HandleFunc("/olympiad", h.PostOlympiad).Methods("POST", "OPTIONS")
 	admins.HandleFunc("/event", h.PostEvent).Methods("POST", "OPTIONS")
 	admins.HandleFunc("/news", h.PostNews).Methods("POST", "OPTIONS")
-
-	//admins.HandleFunc("/all", h.GetAdmins).Methods("GET", "OPTIONS")
 }
 
+// получить список админов
 func (h *AdminHandler) GetAdmins(w http.ResponseWriter, r *http.Request) {
-	ans := make(map[string]interface{})
+	// выставляем необходимые переменные
 	w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
 	w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 	w.Header().Set("Content-Type", "application/json")
+
+	ans := make(map[string]interface{})
+
 	if r.Method == "GET" {
+		// получаем пользователя
 		token := r.Header.Get("Authorization")
 		token = token[7:]
 		session, err := h.SessionModel.GetSessions(token)
-		// fmt.Println(session)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			ans["error"] = "Problem with Database"
@@ -64,6 +67,8 @@ func (h *AdminHandler) GetAdmins(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(ans)
 			return
 		}
+
+		// получаем список админов
 		admins, err := h.AdminModel.GetAdmins()
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -81,17 +86,22 @@ func (h *AdminHandler) GetAdmins(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(ans)
 }
 
+// проверяем что пользователь - админ
 func (h *AdminHandler) CheckAdmin(w http.ResponseWriter, r *http.Request) {
-	ans := make(map[string]interface{})
+	// выставляем необходимые данные
 	w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
 	w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 	w.Header().Set("Content-Type", "application/json")
+
+	ans := make(map[string]interface{})
+
 	if r.Method == "GET" {
+		// получаем пользователя
 		token := r.Header.Get("Authorization")
 		token = token[7:]
 		session, err := h.SessionModel.GetSessions(token)
-		// fmt.Println(session)
+
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			ans["error"] = "Problem with Database"
@@ -104,6 +114,8 @@ func (h *AdminHandler) CheckAdmin(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(ans)
 			return
 		}
+
+		// проверяем что пользователь - админ
 		check, err := h.AdminModel.CheckAdmin(session[0].UserID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -127,13 +139,18 @@ func (h *AdminHandler) CheckAdmin(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(ans)
 }
 
+// добавить организатора
 func (h *AdminHandler) PostHolder(w http.ResponseWriter, r *http.Request) {
-	ans := make(map[string]interface{})
+	// выставляем необходимые переменные
 	w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
 	w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, Type")
 	w.Header().Set("Content-Type", "multipart/form-data")
+
+	ans := make(map[string]interface{})
+
 	if r.Method == "POST" {
+		// получаем пользователя
 		token := r.Header.Get("Authorization")
 		if len(token) < 7 {
 			w.WriteHeader(http.StatusBadRequest)
@@ -143,7 +160,6 @@ func (h *AdminHandler) PostHolder(w http.ResponseWriter, r *http.Request) {
 		}
 		token = token[7:]
 		session, err := h.SessionModel.GetSessions(token)
-		// fmt.Println(session)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			ans["error"] = "Problem with Database"
@@ -156,6 +172,7 @@ func (h *AdminHandler) PostHolder(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(ans)
 			return
 		}
+		// проверяем что пользователь - админ
 		check, err := h.AdminModel.CheckAdmin(session[0].UserID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -169,6 +186,8 @@ func (h *AdminHandler) PostHolder(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(ans)
 			return
 		}
+
+		// получаем фотку
 		r.ParseMultipartForm(10 << 20) //10 MB
 		file, image, err := r.FormFile("holder-logo")
 		if err != nil {
@@ -176,8 +195,10 @@ func (h *AdminHandler) PostHolder(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
+		// дефер чтобы не забыть закрыть
 		defer file.Close()
 
+		// сохраняем фотку
 		image.Filename = time.Now().String() + image.Filename
 		dst, err := os.Create("static/img/" + image.Filename)
 		if err != nil {
@@ -185,17 +206,19 @@ func (h *AdminHandler) PostHolder(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+		// дефер чтобы не забыть закрыть
 		defer dst.Close()
 		if _, err := io.Copy(dst, file); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+
 		name := r.PostFormValue("holder-name")
 		holder := holders.Holder{
 			Name: name,
 			Logo: image.Filename,
 		}
-		// fmt.Println(holder)
+		// создаём организатора
 		h.HolderTable.InsertHolder(holder)
 	}
 	w.WriteHeader(http.StatusOK)
@@ -203,13 +226,18 @@ func (h *AdminHandler) PostHolder(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(ans)
 }
 
+// создаём большую олимпиаду
 func (h *AdminHandler) PostBigOlympiad(w http.ResponseWriter, r *http.Request) {
-	ans := make(map[string]interface{})
+
 	w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
 	w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, Type")
 	w.Header().Set("Content-Type", "multipart/form-data")
+
+	ans := make(map[string]interface{})
+
 	if r.Method == "POST" {
+		// получаем пользователя
 		token := r.Header.Get("Authorization")
 		if len(token) < 7 {
 			w.WriteHeader(http.StatusBadRequest)
@@ -219,7 +247,6 @@ func (h *AdminHandler) PostBigOlympiad(w http.ResponseWriter, r *http.Request) {
 		}
 		token = token[7:]
 		session, err := h.SessionModel.GetSessions(token)
-		// fmt.Println(session)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			ans["error"] = "Problem with Database"
@@ -232,6 +259,8 @@ func (h *AdminHandler) PostBigOlympiad(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(ans)
 			return
 		}
+
+		// проверка на то что пользователь - админ
 		check, err := h.AdminModel.CheckAdmin(session[0].UserID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -245,6 +274,8 @@ func (h *AdminHandler) PostBigOlympiad(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(ans)
 			return
 		}
+
+		// получаем фотографию
 		r.ParseMultipartForm(10 << 20) //10 MB
 		file, image, err := r.FormFile("big_olympiad_logo")
 		if err != nil {
@@ -254,6 +285,7 @@ func (h *AdminHandler) PostBigOlympiad(w http.ResponseWriter, r *http.Request) {
 		}
 		defer file.Close()
 
+		// сохраняем фотографию
 		image.Filename = time.Now().String() + image.Filename
 		dst, err := os.Create("static/img/" + image.Filename)
 		if err != nil {
@@ -266,6 +298,8 @@ func (h *AdminHandler) PostBigOlympiad(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+
+		// получаем данные
 		name := r.PostFormValue("big_olympiad_name")
 		short := r.PostFormValue("short")
 		description := r.PostFormValue("description")
@@ -277,7 +311,8 @@ func (h *AdminHandler) PostBigOlympiad(w http.ResponseWriter, r *http.Request) {
 			Status:      status,
 			Logo:        image.Filename,
 		}
-		//fmt.Println(bigOlympiad)
+
+		// Создаём олимпиаду
 		_, err = h.BigOlympiadModel.CreateBigOlympiad(bigOlympiad)
 		if errors.Is(err, olympiads.ErrBigOlympiadIsAlreadyExisted) {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -297,13 +332,18 @@ func (h *AdminHandler) PostBigOlympiad(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(ans)
 }
 
+// создаём олимпиаду
 func (h *AdminHandler) PostOlympiad(w http.ResponseWriter, r *http.Request) {
-	ans := make(map[string]interface{})
+	// выставляем переменные
 	w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
 	w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, Type")
 	w.Header().Set("Content-Type", "multipart/form-data")
+
+	ans := make(map[string]interface{})
+
 	if r.Method == "POST" {
+		// получаем пользователя
 		token := r.Header.Get("Authorization")
 		if len(token) < 7 {
 			w.WriteHeader(http.StatusBadRequest)
@@ -313,7 +353,6 @@ func (h *AdminHandler) PostOlympiad(w http.ResponseWriter, r *http.Request) {
 		}
 		token = token[7:]
 		session, err := h.SessionModel.GetSessions(token)
-		// fmt.Println(session)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			ans["error"] = "Problem with Database"
@@ -326,6 +365,8 @@ func (h *AdminHandler) PostOlympiad(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(ans)
 			return
 		}
+
+		// проверяем, что пользователь - админ
 		check, err := h.AdminModel.CheckAdmin(session[0].UserID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -339,6 +380,8 @@ func (h *AdminHandler) PostOlympiad(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(ans)
 			return
 		}
+
+		// сохраняем фотографию
 		r.ParseMultipartForm(10 << 20) //10 MB
 		file, image, err := r.FormFile("olympiad_logo")
 		if err != nil {
@@ -360,6 +403,8 @@ func (h *AdminHandler) PostOlympiad(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+
+		// получаем данные
 		name := r.PostFormValue("name")
 		subject := r.PostFormValue("subject")
 		status := r.PostFormValue("status")
@@ -375,7 +420,6 @@ func (h *AdminHandler) PostOlympiad(w http.ResponseWriter, r *http.Request) {
 		}
 		bigOlympiad := r.PostFormValue("big_olympiad")
 		bigOlympiadId, err := strconv.Atoi(bigOlympiad)
-		// fmt.Println("ok")
 
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
@@ -398,7 +442,8 @@ func (h *AdminHandler) PostOlympiad(w http.ResponseWriter, r *http.Request) {
 			HolderID:      int32(holderId),
 			Img:           image.Filename,
 		}
-		// fmt.Println(bigOlympiad)
+
+		// Создаём олимпиаду
 		_, err = h.OlympiadModel.CreateOlympiad(olympiad)
 		if errors.Is(err, olympiads.ErrOlympiadIsAlreadyExisted) {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -419,12 +464,16 @@ func (h *AdminHandler) PostOlympiad(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *AdminHandler) PostEvent(w http.ResponseWriter, r *http.Request) {
-	ans := make(map[string]interface{})
+	// выставляем переменные
 	w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
 	w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, Type")
 	w.Header().Set("Content-Type", "multipart/form-data")
+
+	ans := make(map[string]interface{})
+
 	if r.Method == "POST" {
+		// получаем пользователя
 		token := r.Header.Get("Authorization")
 		if len(token) < 7 {
 			w.WriteHeader(http.StatusBadRequest)
@@ -434,7 +483,6 @@ func (h *AdminHandler) PostEvent(w http.ResponseWriter, r *http.Request) {
 		}
 		token = token[7:]
 		session, err := h.SessionModel.GetSessions(token)
-		// fmt.Println(session)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			ans["error"] = "Problem with Database"
@@ -447,6 +495,8 @@ func (h *AdminHandler) PostEvent(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(ans)
 			return
 		}
+
+		// проверяем что пользователь - админ
 		check, err := h.AdminModel.CheckAdmin(session[0].UserID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -460,6 +510,8 @@ func (h *AdminHandler) PostEvent(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(ans)
 			return
 		}
+
+		// Сохраняем файл
 		r.ParseMultipartForm(10 << 20) //10 MB
 		file, image, err := r.FormFile("event_logo")
 		if err != nil {
@@ -481,6 +533,8 @@ func (h *AdminHandler) PostEvent(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+
+		// получаем данные
 		name := r.PostFormValue("name")
 		status := r.PostFormValue("status")
 		holder := r.PostFormValue("holder")
@@ -491,7 +545,6 @@ func (h *AdminHandler) PostEvent(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(ans)
 			return
 		}
-		// fmt.Println("ok")
 
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
@@ -512,7 +565,8 @@ func (h *AdminHandler) PostEvent(w http.ResponseWriter, r *http.Request) {
 			Description: description,
 			Img:         image.Filename,
 		}
-		// fmt.Println(event)
+
+		// создаём мероприятие
 		_, err = h.EventModel.CreateEvent(event)
 		if errors.Is(err, olympiads.ErrOlympiadIsAlreadyExisted) {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -533,12 +587,16 @@ func (h *AdminHandler) PostEvent(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *AdminHandler) PostNews(w http.ResponseWriter, r *http.Request) {
-	ans := make(map[string]interface{})
+	// выставляем переменные
 	w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
 	w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, Type")
 	w.Header().Set("Content-Type", "multipart/form-data")
+
+	ans := make(map[string]interface{})
+
 	if r.Method == "POST" {
+		// получаем пользователя
 		token := r.Header.Get("Authorization")
 		if len(token) < 7 {
 			w.WriteHeader(http.StatusBadRequest)
@@ -548,7 +606,6 @@ func (h *AdminHandler) PostNews(w http.ResponseWriter, r *http.Request) {
 		}
 		token = token[7:]
 		session, err := h.SessionModel.GetSessions(token)
-		// fmt.Println(session)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			ans["error"] = "Problem with Database"
@@ -561,6 +618,8 @@ func (h *AdminHandler) PostNews(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(ans)
 			return
 		}
+
+		// проверяем, что пользователь - админ
 		check, err := h.AdminModel.CheckAdmin(session[0].UserID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -574,7 +633,8 @@ func (h *AdminHandler) PostNews(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(ans)
 			return
 		}
-		r.ParseMultipartForm(10 << 20) //10 MB
+
+		// получаем необходимые данные
 		title := r.PostFormValue("title")
 		description := r.PostFormValue("description")
 		Table := r.PostFormValue("table")
@@ -593,7 +653,7 @@ func (h *AdminHandler) PostNews(w http.ResponseWriter, r *http.Request) {
 			Key:         int32(key),
 			Description: description,
 		}
-		// fmt.Println(news)
+		// создаём новость
 		err = h.NewsModel.InsertNews(news)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)

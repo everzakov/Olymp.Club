@@ -16,6 +16,7 @@ func NewEventFilter() EventFilter {
 	}
 }
 
+// функа для создания query по фильтру
 func GetQueryEventOptions(filter EventFilter) (string, []interface{}) {
 	inters := make([]interface{}, 0)
 	count := 1
@@ -47,6 +48,5 @@ func GetQueryEventOptions(filter EventFilter) (string, []interface{}) {
 		count += 1
 		inters = append(inters, filter.HolderID)
 	}
-	// fmt.Println(query)
 	return query, inters
 }

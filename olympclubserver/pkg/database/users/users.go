@@ -25,6 +25,7 @@ type User struct {
 	Token2   string
 }
 
+// проверить что пользователь существует
 func (table *UserModel) IsUserExists(email string) (bool, error) {
 	table.mtx.Lock()
 	defer table.mtx.Unlock()
@@ -50,6 +51,7 @@ func (table *UserModel) IsUserExists(email string) (bool, error) {
 	return len(users) > 0, nil
 }
 
+// получить пользователя по почте и хэша пароля
 func (table *UserModel) GetUsersByEmailAndPassword(email, pass_hash string) ([]User, error) {
 	table.mtx.Lock()
 	defer table.mtx.Unlock()
@@ -78,6 +80,7 @@ func (table *UserModel) GetUsersByEmailAndPassword(email, pass_hash string) ([]U
 	return users, nil
 }
 
+// получить пользователя по почте
 func (table *UserModel) GetUsersByEmail(email string) ([]User, error) {
 	table.mtx.Lock()
 	defer table.mtx.Unlock()
@@ -106,6 +109,7 @@ func (table *UserModel) GetUsersByEmail(email string) ([]User, error) {
 	return users, nil
 }
 
+// проверить пользователя по почте и пароля
 func (table *UserModel) CheckUserByEmailAndPassword(email, pass_hash string) (bool, error) {
 	table.mtx.Lock()
 	defer table.mtx.Unlock()
@@ -134,6 +138,7 @@ func (table *UserModel) CheckUserByEmailAndPassword(email, pass_hash string) (bo
 	return len(users) > 0, nil
 }
 
+// получить пользователя по токенам
 func (table *UserModel) GetUsersByTokens(token1, token2 string) ([]User, error) {
 	table.mtx.Lock()
 	defer table.mtx.Unlock()
@@ -162,6 +167,7 @@ func (table *UserModel) GetUsersByTokens(token1, token2 string) ([]User, error) 
 	return users, nil
 }
 
+// обновить пароль
 func (table *UserModel) UpdatePassword(token1, token2, pass_hash string) error {
 	table.mtx.Lock()
 	defer table.mtx.Unlock()
